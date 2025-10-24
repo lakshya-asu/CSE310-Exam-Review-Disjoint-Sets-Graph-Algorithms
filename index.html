@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE310 Exam Review - Disjoint Sets &amp; Graph Algorithms</title>
+    <style>
+        :root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  /* RGB versions for opacity control */
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+  --color-red-500-rgb: 192, 21, 47;
+  --color-red-400-rgb: 255, 84, 89;
+  --color-orange-500-rgb: 168, 75, 47;
+  --color-orange-400-rgb: 230, 129, 97;
+
+  /* Background color tokens (Light Mode) */
+  --color-bg-1: rgba(59, 130, 246, 0.08);
+  --color-bg-2: rgba(245, 158, 11, 0.08);
+  --color-bg-3: rgba(34, 197, 94, 0.08);
+  --color-bg-4: rgba(239, 68, 68, 0.08);
+  --color-bg-5: rgba(147, 51, 234, 0.08);
+  --color-bg-6: rgba(249, 115, 22, 0.08);
+  --color-bg-7: rgba(236, 72, 153, 0.08);
+  --color-bg-8: rgba(6, 182, 212, 0.08);
+
+  /* Semantic Color Tokens (Light Mode) */
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+
+  /* Typography */
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --letter-spacing-tight: -0.01em;
+
+  /* Spacing */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+
+  /* Animation */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-gray-400-rgb: 119, 124, 124;
+    --color-teal-300-rgb: 50, 184, 198;
+    --color-gray-300-rgb: 167, 169, 169;
+    --color-gray-200-rgb: 245, 245, 245;
+
+    --color-bg-1: rgba(29, 78, 216, 0.15);
+    --color-bg-2: rgba(180, 83, 9, 0.15);
+    --color-bg-3: rgba(21, 128, 61, 0.15);
+    --color-bg-4: rgba(185, 28, 28, 0.15);
+    --color-bg-5: rgba(107, 33, 168, 0.15);
+    --color-bg-6: rgba(194, 65, 12, 0.15);
+    --color-bg-7: rgba(190, 24, 93, 0.15);
+    --color-bg-8: rgba(8, 145, 178, 0.15);
+
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-primary-active: var(--color-teal-800);
+    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-btn-primary-text: var(--color-slate-900);
+    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+  }
+}
+
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: var(--space-16);
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+
+p { margin-bottom: var(--space-12); }
+ul, ol { margin-left: var(--space-24); margin-bottom: var(--space-12); }
+li { margin-bottom: var(--space-8); }
+
+code {
+  font-family: var(--font-family-mono);
+  font-size: calc(var(--font-size-base) * 0.9);
+  background-color: var(--color-secondary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-24);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-32);
+  padding-bottom: var(--space-24);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.header h1 {
+  margin-bottom: var(--space-8);
+}
+
+.header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+.nav-tabs {
+  display: flex;
+  gap: var(--space-8);
+  margin-bottom: var(--space-32);
+  border-bottom: 2px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.nav-tab {
+  padding: var(--space-12) var(--space-20);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all var(--duration-fast) var(--ease-standard);
+  margin-bottom: -2px;
+}
+
+.nav-tab:hover {
+  color: var(--color-text);
+  background-color: var(--color-bg-1);
+}
+
+.nav-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+  animation: fadeIn var(--duration-normal) var(--ease-standard);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.content-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  margin-bottom: var(--space-24);
+  box-shadow: var(--shadow-sm);
+}
+
+.subsection {
+  margin-top: var(--space-32);
+}
+
+.subsection:first-child {
+  margin-top: 0;
+}
+
+.viz-container {
+  background: var(--color-bg-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  padding: var(--space-16);
+  margin: var(--space-20) 0;
+}
+
+.viz-image {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-base);
+  display: block;
+}
+
+.code-block {
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  padding: var(--space-16);
+  margin: var(--space-16) 0;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  overflow-x: auto;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.highlight {
+  background: var(--color-bg-3);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.info-box {
+  background: var(--color-bg-2);
+  border-left: 4px solid var(--color-primary);
+  padding: var(--space-16);
+  margin: var(--space-16) 0;
+  border-radius: var(--radius-base);
+}
+
+.info-box strong {
+  display: block;
+  margin-bottom: var(--space-8);
+  color: var(--color-primary);
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-20);
+  margin: var(--space-20) 0;
+}
+
+@media (max-width: 768px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-box {
+  background: var(--color-bg-5);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+}
+
+.question-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-16);
+  overflow: hidden;
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.question-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.question-header {
+  padding: var(--space-16);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-bg-1);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.question-header:hover {
+  background: var(--color-bg-2);
+}
+
+.question-header h4 {
+  margin: 0;
+}
+
+.expand-icon {
+  font-size: var(--font-size-lg);
+  transition: transform var(--duration-fast) var(--ease-standard);
+  color: var(--color-primary);
+}
+
+.expand-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.question-content {
+  padding: var(--space-20);
+  display: none;
+}
+
+.question-content.show {
+  display: block;
+  animation: slideDown var(--duration-normal) var(--ease-standard);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 1000px; }
+}
+
+.btn {
+  display: inline-block;
+  padding: var(--space-12) var(--space-24);
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  border: none;
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.btn:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  background: var(--color-primary-active);
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--color-secondary);
+  color: var(--color-text);
+}
+
+.btn-secondary:hover {
+  background: var(--color-secondary-hover);
+}
+
+.complexity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-16) 0;
+}
+
+.complexity-table th,
+.complexity-table td {
+  padding: var(--space-12);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.complexity-table th {
+  background: var(--color-bg-1);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.complexity-table tr:hover {
+  background: var(--color-bg-2);
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--color-bg-3);
+  color: var(--color-text);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-right: var(--space-8);
+}
+
+.badge-primary {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+}
+
+.badge-success {
+  background: var(--color-bg-3);
+  color: var(--color-text);
+}
+
+.step-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-16);
+  margin-bottom: var(--space-16);
+  flex-wrap: wrap;
+}
+
+.step-indicator {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  min-width: 120px;
+  text-align: center;
+}
+
+.operation-text {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
+  text-align: center;
+  padding: var(--space-12);
+  background: var(--color-bg-1);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-16);
+}
+
+.explanation-text {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--space-12);
+  background: var(--color-bg-2);
+  border-radius: var(--radius-base);
+  margin-top: var(--space-16);
+  line-height: 1.6;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+  background: var(--color-surface);
+  border-radius: var(--radius-base);
+  max-width: 100%;
+  height: auto;
+}
+
+.solution-content {
+  margin-top: var(--space-16);
+  padding-top: var(--space-16);
+  border-top: 2px solid var(--color-border);
+  animation: fadeIn var(--duration-normal) var(--ease-standard);
+}
+
+.question-content.show .btn {
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CSE310 Exam Review</h1>
+            <p>Disjoint Sets &amp; Graph Algorithms (BFS/DFS)</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('overview')">Overview</button>
+            <button class="nav-tab" onclick="showSection('disjoint-sets')">Disjoint Sets</button>
+            <button class="nav-tab" onclick="showSection('graphs')">Graph Algorithms</button>
+            <button class="nav-tab" onclick="showSection('practice')">Practice Questions</button>
+        </nav>
+
+        <!-- Overview Section -->
+        <section id="overview" class="section active">
+            <div class="content-card">
+                <h2>Welcome to Your Exam Review</h2>
+                <p>This interactive presentation covers two fundamental topics in data structures and algorithms:</p>
+
+                <div class="two-col">
+                    <div class="feature-box">
+                        <h3>🌳 Disjoint Sets</h3>
+                        <p>Master the Union-Find data structure with path compression and union by rank optimizations.</p>
+                        <ul>
+                            <li>Theory and operations</li>
+                            <li>Time complexity analysis</li>
+                            <li>Real-world applications</li>
+                            <li>Interactive visualizations</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-box">
+                        <h3>🔍 Graph Algorithms</h3>
+                        <p>Explore Breadth-First Search (BFS) and Depth-First Search (DFS) algorithms in detail.</p>
+                        <ul>
+                            <li>BFS for shortest paths</li>
+                            <li>DFS for deep exploration</li>
+                            <li>Step-by-step visualizations</li>
+                            <li>Algorithm comparison</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>How to Use This Review:</strong>
+                    <ol>
+                        <li>Navigate through sections using the tabs above</li>
+                        <li>Study theory and key concepts for each topic</li>
+                        <li>Interact with step-by-step algorithm visualizations</li>
+                        <li>Test your knowledge with practice questions</li>
+                        <li>Expand answers to check your understanding</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Disjoint Sets Section -->
+        <section id="disjoint-sets" class="section">
+            <div class="content-card">
+                <h2>Disjoint Sets (Union-Find)</h2>
+
+                <div class="subsection">
+                    <h3>Theory Overview</h3>
+                    <p>The <strong>Disjoint-Set</strong> data structure (also called Union-Find) maintains a collection of non-overlapping sets. It supports two primary operations efficiently:</p>
+
+                    <div class="two-col">
+                        <div class="feature-box">
+                            <h4>Make-Set(x)</h4>
+                            <p>Creates a new set containing only element x, with x as its own representative.</p>
+                        </div>
+                        <div class="feature-box">
+                            <h4>Union(x, y)</h4>
+                            <p>Merges the sets containing x and y into a single set.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-box" style="margin-top: var(--space-16);">
+                        <h4>Find-Set(x)</h4>
+                        <p>Returns the representative (root) of the set containing x. Used to determine if two elements are in the same set.</p>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Interactive Step-by-Step Walkthrough</h3>
+                    <p>Watch how Union-Find operations transform the data structure:</p>
+                    <div class="info-box">
+                        <strong>Problem:</strong> Perform Union(1,2), Union(3,4), Union(5,6), Union(7,8), Union(2,4), Union(6,8), Union(4,8)
+                    </div>
+                    <div class="viz-container">
+                        <div class="step-controls">
+                            <button class="btn btn-secondary" onclick="ufPrevStep()" id="uf-prev">← Previous</button>
+                            <span class="step-indicator" id="uf-step-indicator">Step 0 of 7</span>
+                            <button class="btn btn-secondary" onclick="ufNextStep()" id="uf-next">Next →</button>
+                            <button class="btn btn-secondary" onclick="ufReset()">Reset</button>
+                        </div>
+                        <div id="uf-operation" class="operation-text">Initial: Make-Set for all</div>
+                        <canvas id="ufCanvas" width="900" height="500"></canvas>
+                        <div id="uf-explanation" class="explanation-text">Each element is its own representative</div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Key Optimizations</h3>
+
+                    <h4>1. Path Compression</h4>
+                    <p>During <code>Find-Set</code> operations, make every node on the path point directly to the root. This flattens the tree structure.</p>
+                    <div class="code-block">Find-Set(x):
+    if parent[x] ≠ x:
+        parent[x] = Find-Set(parent[x])  // Path compression
+    return parent[x]</div>
+                    <p><span class="badge-success badge">Benefit:</span> Reduces future Find operations to nearly constant time</p>
+
+                    <h4>2. Union by Rank</h4>
+                    <p>When merging sets, attach the smaller tree under the root of the larger tree. Track tree "rank" (approximate height).</p>
+                    <div class="code-block">Union(x, y):
+    rootX = Find-Set(x)
+    rootY = Find-Set(y)
+    
+    if rootX = rootY:
+        return  // Already in same set
+    
+    if rank[rootX] < rank[rootY]:
+        parent[rootX] = rootY
+    else if rank[rootX] > rank[rootY]:
+        parent[rootY] = rootX
+    else:
+        parent[rootY] = rootX
+        rank[rootX] = rank[rootX] + 1</div>
+                    <p><span class="badge-success badge">Benefit:</span> Keeps trees balanced and shallow</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Time Complexity</h3>
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Implementation</th>
+                                <th>Find-Set</th>
+                                <th>Union</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Naive (linked lists)</td>
+                                <td>O(1)</td>
+                                <td>O(n)</td>
+                                <td>Simple but slow unions</td>
+                            </tr>
+                            <tr>
+                                <td>With Union by Rank</td>
+                                <td>O(log n)</td>
+                                <td>O(log n)</td>
+                                <td>Balanced trees</td>
+                            </tr>
+                            <tr>
+                                <td>With Path Compression</td>
+                                <td>O(log n)</td>
+                                <td>O(log n)</td>
+                                <td>Flattened paths</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Both Optimizations</strong></td>
+                                <td><strong>O(α(n))</strong></td>
+                                <td><strong>O(α(n))</strong></td>
+                                <td><strong>Practically constant!</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><em>Note: α(n) is the inverse Ackermann function, which grows incredibly slowly. For all practical values of n, α(n) ≤ 4.</em></p>
+                </div>
+
+                <div class="subsection">
+                    <h3>Applications</h3>
+                    <div class="two-col">
+                        <div class="info-box">
+                            <strong>🔗 Connected Components</strong>
+                            <p>Efficiently track and query connectivity in graphs. Check if two nodes are connected in O(α(n)) time.</p>
+                        </div>
+                        <div class="info-box">
+                            <strong>🌲 Kruskal's MST</strong>
+                            <p>Detect cycles when building minimum spanning trees. Union-Find prevents adding edges that create cycles.</p>
+                        </div>
+                        <div class="info-box">
+                            <strong>🖼️ Image Processing</strong>
+                            <p>Find connected regions in images for segmentation and object detection tasks.</p>
+                        </div>
+                        <div class="info-box">
+                            <strong>🌐 Network Connectivity</strong>
+                            <p>Track network connections and determine if adding/removing links affects connectivity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Graph Algorithms Section -->
+        <section id="graphs" class="section">
+            <div class="content-card">
+                <h2>Graph Algorithms</h2>
+
+                <div class="subsection">
+                    <h3>Graph Representations</h3>
+                    <p>Before exploring traversal algorithms, understand how graphs are stored:</p>
+
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Representation</th>
+                                <th>Space Complexity</th>
+                                <th>Edge Lookup</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Adjacency Matrix</strong></td>
+                                <td>O(V²)</td>
+                                <td>O(1)</td>
+                                <td>Dense graphs, quick edge queries</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Adjacency List</strong></td>
+                                <td>O(V + E)</td>
+                                <td>O(degree)</td>
+                                <td>Sparse graphs, iteration</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>🔵 Breadth-First Search (BFS)</h3>
+                    
+                    <h4>Algorithm Overview</h4>
+                    <p>BFS explores a graph <span class="highlight">level by level</span>, visiting all neighbors at distance k before visiting any at distance k+1. It uses a <strong>queue</strong> to maintain the frontier of exploration.</p>
+
+                    <div class="info-box">
+                        <strong>Key Properties:</strong>
+                        <ul>
+                            <li>Computes shortest path distances in unweighted graphs</li>
+                            <li>Builds a breadth-first tree rooted at source</li>
+                            <li>Uses vertex coloring: WHITE (undiscovered) → GRAY (discovered) → BLACK (finished)</li>
+                            <li>Time: O(V + E), Space: O(V)</li>
+                        </ul>
+                    </div>
+
+                    <h4>Pseudocode</h4>
+                    <div class="code-block">BFS(G, source s):
+    // Initialize all vertices
+    for each vertex u in G.V:
+        color[u] = WHITE
+        distance[u] = ∞
+        parent[u] = NIL
+    
+    // Start from source
+    color[s] = GRAY
+    distance[s] = 0
+    parent[s] = NIL
+    Q = empty queue
+    Enqueue(Q, s)
+    
+    // Process vertices level by level
+    while Q is not empty:
+        u = Dequeue(Q)
+        for each vertex v adjacent to u:
+            if color[v] = WHITE:
+                color[v] = GRAY
+                distance[v] = distance[u] + 1
+                parent[v] = u
+                Enqueue(Q, v)
+        color[u] = BLACK</div>
+
+                    <h4>Interactive Step-by-Step Walkthrough</h4>
+                    <div class="info-box">
+                        <strong>Problem:</strong> Run BFS from source 's' on graph {r,s,t,u,v,w,x,y}
+                    </div>
+                    <div class="viz-container">
+                        <div class="step-controls">
+                            <button class="btn btn-secondary" onclick="bfsPrevStep()" id="bfs-prev">← Previous</button>
+                            <span class="step-indicator" id="bfs-step-indicator">Step 0 of 9</span>
+                            <button class="btn btn-secondary" onclick="bfsNextStep()" id="bfs-next">Next →</button>
+                            <button class="btn btn-secondary" onclick="bfsReset()">Reset</button>
+                        </div>
+                        <div id="bfs-description" class="operation-text">Initialize all WHITE, distances ∞</div>
+                        <canvas id="bfsCanvas" width="900" height="600"></canvas>
+                    </div>
+
+                    <div class="two-col">
+                        <div class="feature-box">
+                            <h4>Data Structures</h4>
+                            <ul>
+                                <li><strong>Queue:</strong> FIFO for frontier vertices</li>
+                                <li><strong>Color array:</strong> Track vertex states</li>
+                                <li><strong>Distance array:</strong> Shortest path lengths</li>
+                                <li><strong>Parent array:</strong> Build BF tree</li>
+                            </ul>
+                        </div>
+                        <div class="feature-box">
+                            <h4>Applications</h4>
+                            <ul>
+                                <li>Shortest path in unweighted graphs</li>
+                                <li>Connected components</li>
+                                <li>Bipartite graph testing</li>
+                                <li>Web crawling</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>🔴 Depth-First Search (DFS)</h3>
+                    
+                    <h4>Algorithm Overview</h4>
+                    <p>DFS explores a graph by going as <span class="highlight">deep as possible</span> before backtracking. It uses <strong>recursion</strong> (implicit stack) or an explicit stack to track the exploration path.</p>
+
+                    <div class="info-box">
+                        <strong>Key Properties:</strong>
+                        <ul>
+                            <li>Assigns discovery and finish timestamps to each vertex</li>
+                            <li>Classifies edges: tree, back, forward, cross</li>
+                            <li>Builds a depth-first forest</li>
+                            <li>Time: O(V + E), Space: O(V)</li>
+                        </ul>
+                    </div>
+
+                    <h4>Pseudocode</h4>
+                    <div class="code-block">DFS(G):
+    for each vertex u in G.V:
+        color[u] = WHITE
+        parent[u] = NIL
+    time = 0
+    
+    for each vertex u in G.V:
+        if color[u] = WHITE:
+            DFS-Visit(G, u)
+
+DFS-Visit(G, u):
+    time = time + 1
+    discovery[u] = time
+    color[u] = GRAY
+    
+    for each vertex v adjacent to u:
+        if color[v] = WHITE:
+            parent[v] = u
+            DFS-Visit(G, v)
+    
+    color[u] = BLACK
+    time = time + 1
+    finish[u] = time</div>
+
+                    <h4>Interactive Step-by-Step Walkthrough</h4>
+                    <div class="info-box">
+                        <strong>Problem:</strong> Run DFS from vertex 'r' on graph {r,s,t,u,v,w,x,y}
+                    </div>
+                    <div class="viz-container">
+                        <div class="step-controls">
+                            <button class="btn btn-secondary" onclick="dfsPrevStep()" id="dfs-prev">← Previous</button>
+                            <span class="step-indicator" id="dfs-step-indicator">Step 1 of 16</span>
+                            <button class="btn btn-secondary" onclick="dfsNextStep()" id="dfs-next">Next →</button>
+                            <button class="btn btn-secondary" onclick="dfsReset()">Reset</button>
+                        </div>
+                        <div id="dfs-action" class="operation-text">Visit r, d[r]=1</div>
+                        <canvas id="dfsCanvas" width="900" height="600"></canvas>
+                    </div>
+
+                    <h4>Edge Classification</h4>
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Edge Type</th>
+                                <th>Description</th>
+                                <th>Identification</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge">Tree Edge</span></td>
+                                <td>Edge in DFS forest</td>
+                                <td>Connects to WHITE vertex</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Back Edge</span></td>
+                                <td>Points to ancestor</td>
+                                <td>Connects to GRAY vertex</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Forward Edge</span></td>
+                                <td>Points to descendant</td>
+                                <td>Connects to BLACK vertex (u before v)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Cross Edge</span></td>
+                                <td>All other edges</td>
+                                <td>Connects to BLACK vertex (v before u)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="two-col">
+                        <div class="feature-box">
+                            <h4>Applications</h4>
+                            <ul>
+                                <li>Topological sorting</li>
+                                <li>Cycle detection</li>
+                                <li>Strongly connected components</li>
+                                <li>Maze solving</li>
+                            </ul>
+                        </div>
+                        <div class="feature-box">
+                            <h4>Timestamps</h4>
+                            <p><strong>Discovery time d[u]:</strong> When vertex is first encountered</p>
+                            <p><strong>Finish time f[u]:</strong> When all descendants are explored</p>
+                            <p>Property: d[u] &lt; f[u] for all vertices</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>BFS vs DFS Comparison</h3>
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>BFS</th>
+                                <th>DFS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Data Structure</td>
+                                <td>Queue (FIFO)</td>
+                                <td>Stack (LIFO) / Recursion</td>
+                            </tr>
+                            <tr>
+                                <td>Exploration</td>
+                                <td>Level by level</td>
+                                <td>Deep exploration with backtracking</td>
+                            </tr>
+                            <tr>
+                                <td>Shortest Path</td>
+                                <td>✓ Yes (unweighted)</td>
+                                <td>✗ No</td>
+                            </tr>
+                            <tr>
+                                <td>Memory</td>
+                                <td>O(V) - stores full level</td>
+                                <td>O(V) - recursion depth</td>
+                            </tr>
+                            <tr>
+                                <td>Complete?</td>
+                                <td>✓ Yes</td>
+                                <td>✓ Yes</td>
+                            </tr>
+                            <tr>
+                                <td>Time</td>
+                                <td>O(V + E)</td>
+                                <td>O(V + E)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practice Questions Section -->
+        <section id="practice" class="section">
+            <div class="content-card">
+                <h2>Practice Questions</h2>
+                <p>Test your understanding with these exam-style questions. Click to reveal answers.</p>
+
+                <!-- Disjoint Sets Questions -->
+                <h3 style="margin-top: var(--space-32);">Disjoint Sets</h3>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q1: Trace Union Operations</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> Given elements {a,b,c,d,e,f}, perform these operations and show the final array state:</p>
+                        <p>Make-Set for all, Union(a,b), Union(c,d), Union(e,f), Union(b,d), Union(d,f)</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q1-solution')" id="q1-btn">Show Solution</button>
+                        
+                        <div id="q1-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        <canvas id="q1Canvas" width="800" height="400"></canvas>
+                        <div class="code-block">Step-by-step:
+
+1. Make-Set: parent={a:a,b:b,c:c,d:d,e:e,f:f}, rank=all 0
+
+2. Union(a,b): a becomes root
+   parent={a:a,b:a,c:c,d:d,e:e,f:f}, rank[a]=1
+
+3. Union(c,d): c becomes root
+   parent={a:a,b:a,c:c,d:c,e:e,f:f}, rank[c]=1
+
+4. Union(e,f): e becomes root
+   parent={a:a,b:a,c:c,d:c,e:e,f:e}, rank[e]=1
+
+5. Union(b,d) → Union(a,c): both rank 1, c→a
+   parent={a:a,b:a,c:a,d:c,e:e,f:e}, rank[a]=2
+
+6. Union(d,f) → Union(a,e): both rank 2, e→a
+   parent={a:a,b:a,c:a,d:c,e:a,f:e}, rank[a]=3
+
+Final: All elements in one set rooted at 'a'</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q2: Path Compression Visualization</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> Explain why path compression improves performance. Show a before/after example with a tall tree.</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q2-solution')" id="q2-btn">Show Solution</button>
+                        
+                        <div id="q2-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        <canvas id="q2Canvas" width="800" height="350"></canvas>
+                        <p><strong>Why it works:</strong> Path compression flattens the tree during Find operations. When we traverse from a node to the root, we make every node on that path point directly to the root.</p>
+                        <ul>
+                            <li><strong>Before:</strong> Chain of height h requires h steps to find root</li>
+                            <li><strong>After:</strong> All nodes point to root, requiring only 1 step</li>
+                            <li><strong>Impact:</strong> Future Find operations are O(1) for compressed nodes</li>
+                            <li><strong>Amortized:</strong> Over many operations, average cost approaches O(α(n))</li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q3: Trace Find-Set with Path Compression</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> Given a tree where 5→4→3→2→1, trace Find-Set(5) with path compression. Show the tree before and after.</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q3-solution')" id="q3-btn">Show Solution</button>
+                        
+                        <div id="q3-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        <canvas id="q3Canvas" width="800" height="350"></canvas>
+                        <p><strong>Trace:</strong></p>
+                        <ol>
+                            <li>Find-Set(5): Check parent[5]=4, not root</li>
+                            <li>Recursively call Find-Set(4): parent[4]=3, not root</li>
+                            <li>Recursively call Find-Set(3): parent[3]=2, not root</li>
+                            <li>Recursively call Find-Set(2): parent[2]=1, not root</li>
+                            <li>Recursively call Find-Set(1): parent[1]=1, is root!</li>
+                            <li>Return path: set parent[2]=1, parent[3]=1, parent[4]=1, parent[5]=1</li>
+                            <li>Result: All nodes now point directly to root 1</li>
+                        </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q4: Connected Components</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> Given an undirected graph with 6 vertices {1,2,3,4,5,6} and edges (1,2), (2,3), (4,5), how would you use Union-Find to count connected components?</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q4-solution')" id="q4-btn">Show Solution</button>
+                        
+                        <div id="q4-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        <p><strong>Algorithm:</strong></p>
+                        <ol>
+                            <li>Initialize: Make-Set for each vertex (6 components)</li>
+                            <li>Process edge (1,2): Union(1,2) → 5 components</li>
+                            <li>Process edge (2,3): Union(2,3) → 4 components</li>
+                            <li>Process edge (4,5): Union(4,5) → 3 components</li>
+                        </ol>
+                        <p><strong>Final components:</strong> {1,2,3}, {4,5}, {6}</p>
+                        <p><strong>To count:</strong> Count distinct roots by calling Find-Set on all vertices, or maintain a counter that decrements with each successful union.</p>
+                        <div class="code-block">def count_components(n, edges):
+    parent = list(range(n))
+    components = n
+    
+    for u, v in edges:
+        root_u = find_set(parent, u)
+        root_v = find_set(parent, v)
+        if root_u != root_v:
+            parent[root_u] = root_v
+            components -= 1
+    
+    return components</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graph Algorithm Questions -->
+                <h3 style="margin-top: var(--space-32);">Graph Algorithms</h3>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q5: Trace BFS Execution</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> Given a graph with vertices {A,B,C,D,E} and edges {(A,B), (A,C), (B,D), (C,D), (D,E)}, trace BFS starting from A. Show queue states at each step.</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q5-solution')" id="q5-btn">Show Solution</button>
+                        
+                        <div id="q5-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        <canvas id="q5Canvas" width="800" height="400"></canvas>
+                        <div class="code-block">Step 0: Initialize
+  Queue: [A]
+  Distance: A=0, others=∞
+  Color: A=GRAY, others=WHITE
+
+Step 1: Process A
+  Dequeue A, enqueue neighbors B, C
+  Queue: [B, C]
+  Distance: A=0, B=1, C=1
+  Color: A=BLACK, B=GRAY, C=GRAY
+
+Step 2: Process B
+  Dequeue B, enqueue neighbor D
+  Queue: [C, D]
+  Distance: A=0, B=1, C=1, D=2
+  Color: A=BLACK, B=BLACK, C=GRAY, D=GRAY
+
+Step 3: Process C
+  Dequeue C, D already GRAY (skip)
+  Queue: [D]
+  Color: A=BLACK, B=BLACK, C=BLACK, D=GRAY
+
+Step 4: Process D
+  Dequeue D, enqueue neighbor E
+  Queue: [E]
+  Distance: A=0, B=1, C=1, D=2, E=3
+  Color: A=BLACK, B=BLACK, C=BLACK, D=BLACK, E=GRAY
+
+Step 5: Process E
+  Dequeue E, no new neighbors
+  Queue: []
+  All vertices BLACK - done!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q6: Shortest Path with BFS</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> Using the BFS tree from Q5, what is the shortest path from A to E? Show the path and its length.</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q6-solution')" id="q6-btn">Show Solution</button>
+                        
+                        <div id="q6-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        <canvas id="q6Canvas" width="800" height="350"></canvas>
+                        <p><strong>Path reconstruction:</strong></p>
+                        <ol>
+                            <li>From BFS, we have parent[E]=D, parent[D]=B, parent[B]=A, parent[A]=NIL</li>
+                            <li>Trace back: E ← D ← B ← A</li>
+                            <li>Reverse to get path: A → B → D → E</li>
+                            <li>Length: distance[E] = 3</li>
+                        </ol>
+                        <p><strong>Why shortest?</strong> BFS explores vertices level by level. All paths of length k are explored before any path of length k+1, guaranteeing the first path found is shortest.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q7: DFS Discovery/Finish Times</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> For the graph from Q5, trace DFS starting from A. Show discovery and finish times for each vertex.</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q7-solution')" id="q7-btn">Show Solution</button>
+                        
+                        <div id="q7-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        <canvas id="q7Canvas" width="800" height="400"></canvas>
+                        <div class="code-block">DFS starting from A (alphabetical neighbor order):
+
+time=1: Discover A (d[A]=1)
+time=2: Discover B (d[B]=2)
+time=3: Discover D (d[D]=3)
+time=4: Discover C (d[C]=4) [via D]
+time=5: Finish C (f[C]=5) [back to D]
+time=6: Discover E (d[E]=6)
+time=7: Finish E (f[E]=7) [back to D]
+time=8: Finish D (f[D]=8) [back to B]
+time=9: Finish B (f[B]=9) [back to A]
+time=10: Finish A (f[A]=10)
+
+Final timestamps:
+  A: [1/10]   B: [2/9]   C: [4/5]
+  D: [3/8]    E: [6/7]
+
+DFS tree: A→B→D, D→C, D→E</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q8: Edge Classification in DFS</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> Given a directed graph with a DFS tree, classify the edge (C,A) if d[A]=1, f[A]=10, d[C]=4, f[C]=5. Is it a tree, back, forward, or cross edge?</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q8-solution')" id="q8-btn">Show Solution</button>
+                        
+                        <div id="q8-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        <p><strong>Edge Classification Rules:</strong></p>
+                        <ul>
+                            <li><strong>Tree edge:</strong> v is WHITE when explored from u</li>
+                            <li><strong>Back edge:</strong> v is GRAY (ancestor in DFS tree)</li>
+                            <li><strong>Forward edge:</strong> v is BLACK and d[u] &lt; d[v] (descendant)</li>
+                            <li><strong>Cross edge:</strong> v is BLACK and d[u] &gt; d[v] (no ancestor-descendant)</li>
+                        </ul>
+                        <p><strong>For edge (C,A):</strong></p>
+                        <ol>
+                            <li>Check timestamps: d[C]=4, f[C]=5, d[A]=1, f[A]=10</li>
+                            <li>Note that d[A] &lt; d[C] &lt; f[C] &lt; f[A]</li>
+                            <li>This means C's interval [4,5] is nested inside A's interval [1,10]</li>
+                            <li>Therefore C is a descendant of A</li>
+                            <li>Edge (C,A) points from descendant to ancestor</li>
+                        </ol>
+                        <p><strong>Answer: BACK EDGE</strong></p>
+                        <p>Back edges point to ancestors and indicate cycles in directed graphs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Q9: BFS vs DFS - When to Use Each</h4>
+                    </div>
+                    <div class="question-content show">
+                        <p><strong>Question:</strong> Compare BFS and DFS. When should you use each algorithm? Give specific application scenarios.</p>
+                        
+                        <button class="btn" onclick="toggleSolution('q9-solution')" id="q9-btn">Show Solution</button>
+                        
+                        <div id="q9-solution" class="solution-content" style="display: none;">
+                        <h4 style="margin-top: var(--space-16);">Solution:</h4>
+                        
+                        <p><strong>Use BFS when:</strong></p>
+                        <ul>
+                            <li>✅ <strong>Shortest paths:</strong> Finding shortest path in unweighted graphs</li>
+                            <li>✅ <strong>Bipartite testing:</strong> Checking if graph can be 2-colored</li>
+                            <li>✅ <strong>Level-order:</strong> Processing nodes level by level (web crawling)</li>
+                            <li>✅ <strong>Nearest neighbors:</strong> Finding all nodes within k distance</li>
+                            <li>✅ <strong>Shallow solutions:</strong> When solution is likely near the source</li>
+                        </ul>
+                        
+                        <p><strong>Use DFS when:</strong></p>
+                        <ul>
+                            <li>✅ <strong>Topological sort:</strong> Ordering tasks with dependencies</li>
+                            <li>✅ <strong>Cycle detection:</strong> Finding back edges indicates cycles</li>
+                            <li>✅ <strong>Connectivity:</strong> Finding strongly connected components</li>
+                            <li>✅ <strong>Path existence:</strong> Simply checking if path exists</li>
+                            <li>✅ <strong>Backtracking:</strong> Maze solving, puzzle solving</li>
+                            <li>✅ <strong>Memory efficiency:</strong> Better for very wide graphs</li>
+                        </ul>
+                        
+                        <table class="complexity-table" style="margin-top: var(--space-16);">
+                            <thead>
+                                <tr><th>Feature</th><th>BFS</th><th>DFS</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Data Structure</td><td>Queue (FIFO)</td><td>Stack/Recursion (LIFO)</td></tr>
+                                <tr><td>Memory</td><td>O(width)</td><td>O(depth)</td></tr>
+                                <tr><td>Shortest Path</td><td>✅ Yes</td><td>❌ No</td></tr>
+                                <tr><td>Completeness</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+// ============================================
+// UNION-FIND VISUALIZATION
+// ============================================
+const ufData = {
+    steps: [
+        {operation: "Initial: Make-Set for all", parent: [1,2,3,4,5,6,7,8], rank: [0,0,0,0,0,0,0,0], explanation: "Each element is its own representative"},
+        {operation: "Union(1,2)", parent: [1,1,3,4,5,6,7,8], rank: [1,0,0,0,0,0,0,0], explanation: "Find(1)=1, Find(2)=2, both rank 0, attach 2 under 1, rank[1]→1"},
+        {operation: "Union(3,4)", parent: [1,1,3,3,5,6,7,8], rank: [1,0,1,0,0,0,0,0], explanation: "Find(3)=3, Find(4)=4, attach 4 under 3, rank[3]→1"},
+        {operation: "Union(5,6)", parent: [1,1,3,3,5,5,7,8], rank: [1,0,1,0,1,0,0,0], explanation: "Find(5)=5, Find(6)=6, attach 6 under 5, rank[5]→1"},
+        {operation: "Union(7,8)", parent: [1,1,3,3,5,5,7,7], rank: [1,0,1,0,1,0,1,0], explanation: "Find(7)=7, Find(8)=8, attach 8 under 7, rank[7]→1"},
+        {operation: "Union(2,4) → Union(1,3)", parent: [1,1,1,3,5,5,7,7], rank: [2,0,1,0,1,0,1,0], explanation: "Find(2)=1, Find(4)=3, both rank 1, attach 3 under 1, rank[1]→2"},
+        {operation: "Union(6,8) → Union(5,7)", parent: [1,1,1,3,5,5,5,7], rank: [2,0,1,0,2,0,1,0], explanation: "Find(6)=5, Find(8)=7, both rank 1, attach 7 under 5, rank[5]→2"},
+        {operation: "Union(4,8) → Union(1,5)", parent: [1,1,1,3,1,5,5,7], rank: [3,0,1,0,2,0,1,0], explanation: "Find(4)=1, Find(8)=5, both rank 2, attach 5 under 1, rank[1]→3. All elements now in one set!"}
+    ],
+    currentStep: 0
+};
+
+function drawUF() {
+    const canvas = document.getElementById('ufCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const step = ufData.steps[ufData.currentStep];
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '14px var(--font-family-mono)';
+    
+    // Draw parent array
+    ctx.fillStyle = '#666';
+    ctx.fillText('Parent Array:', 20, 30);
+    for (let i = 0; i < 8; i++) {
+        const x = 20 + i * 60;
+        ctx.fillStyle = '#f5f5f5';
+        ctx.fillRect(x, 40, 50, 30);
+        ctx.strokeStyle = '#333';
+        ctx.strokeRect(x, 40, 50, 30);
+        ctx.fillStyle = '#333';
+        ctx.fillText((i+1).toString(), x + 20, 58);
+        ctx.fillStyle = step.parent[i] === (i+1) ? '#1d7d8d' : '#666';
+        ctx.font = 'bold 16px var(--font-family-mono)';
+        ctx.fillText(step.parent[i].toString(), x + 20, 90);
+        ctx.font = '14px var(--font-family-mono)';
+    }
+    
+    // Draw rank array
+    ctx.fillStyle = '#666';
+    ctx.fillText('Rank Array:', 520, 30);
+    for (let i = 0; i < 8; i++) {
+        const x = 520 + i * 45;
+        ctx.fillStyle = '#fff5e6';
+        ctx.fillRect(x, 40, 40, 30);
+        ctx.strokeStyle = '#333';
+        ctx.strokeRect(x, 40, 40, 30);
+        ctx.fillStyle = '#333';
+        ctx.fillText((i+1).toString(), x + 15, 58);
+        ctx.fillStyle = step.rank[i] > 0 ? '#d67a2e' : '#999';
+        ctx.font = 'bold 16px var(--font-family-mono)';
+        ctx.fillText(step.rank[i].toString(), x + 15, 90);
+        ctx.font = '14px var(--font-family-mono)';
+    }
+    
+    // Draw forest
+    ctx.fillStyle = '#666';
+    ctx.fillText('Forest Structure:', 20, 130);
+    
+    // Find roots
+    const roots = [];
+    for (let i = 0; i < 8; i++) {
+        if (step.parent[i] === i+1) roots.push(i+1);
+    }
+    
+    // Draw each tree
+    const treeSpacing = 800 / (roots.length + 1);
+    roots.forEach((root, idx) => {
+        const rootX = treeSpacing * (idx + 1);
+        const rootY = 160;
+        
+        // Find children of this root
+        const tree = buildTree(root, step.parent);
+        drawTree(ctx, tree, rootX, rootY, 60);
+    });
+}
+
+function buildTree(node, parent) {
+    const children = [];
+    for (let i = 0; i < parent.length; i++) {
+        if (parent[i] === node && (i+1) !== node) {
+            children.push(buildTree(i+1, parent));
+        }
+    }
+    return {value: node, children};
+}
+
+function drawTree(ctx, tree, x, y, spacing) {
+    // Draw node
+    ctx.fillStyle = '#32b8c6';
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#1d7d8d';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(tree.value.toString(), x, y + 5);
+    
+    // Draw children
+    const childCount = tree.children.length;
+    if (childCount > 0) {
+        const childSpacing = spacing * Math.min(1, 3 / childCount);
+        const startX = x - ((childCount - 1) * childSpacing) / 2;
+        
+        tree.children.forEach((child, idx) => {
+            const childX = startX + idx * childSpacing;
+            const childY = y + 80;
+            
+            // Draw edge
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y + 20);
+            ctx.lineTo(childX, childY - 20);
+            ctx.stroke();
+            
+            // Draw child tree
+            drawTree(ctx, child, childX, childY, childSpacing);
+        });
+    }
+}
+
+function ufNextStep() {
+    if (ufData.currentStep < ufData.steps.length - 1) {
+        ufData.currentStep++;
+        updateUF();
+    }
+}
+
+function ufPrevStep() {
+    if (ufData.currentStep > 0) {
+        ufData.currentStep--;
+        updateUF();
+    }
+}
+
+function ufReset() {
+    ufData.currentStep = 0;
+    updateUF();
+}
+
+function updateUF() {
+    const step = ufData.steps[ufData.currentStep];
+    document.getElementById('uf-step-indicator').textContent = `Step ${ufData.currentStep} of ${ufData.steps.length - 1}`;
+    document.getElementById('uf-operation').textContent = step.operation;
+    document.getElementById('uf-explanation').textContent = step.explanation;
+    document.getElementById('uf-prev').disabled = ufData.currentStep === 0;
+    document.getElementById('uf-next').disabled = ufData.currentStep === ufData.steps.length - 1;
+    drawUF();
+}
+
+// ============================================
+// BFS VISUALIZATION
+// ============================================
+const bfsData = {
+    graph: {vertices: ['r','s','t','u','v','w','x','y'], edges: [['r','s'],['r','v'],['s','w'],['w','t'],['w','x'],['t','x'],['t','u'],['x','u'],['x','y'],['u','y']]},
+    steps: [
+        {desc: "Initialize all WHITE, distances ∞", queue: [], colors: {r:'WHITE',s:'WHITE',t:'WHITE',u:'WHITE',v:'WHITE',w:'WHITE',x:'WHITE',y:'WHITE'}, dist: {r:'∞',s:'∞',t:'∞',u:'∞',v:'∞',w:'∞',x:'∞',y:'∞'}, parent: {r:'NIL',s:'NIL',t:'NIL',u:'NIL',v:'NIL',w:'NIL',x:'NIL',y:'NIL'}},
+        {desc: "Discover source s", queue: ['s'], colors: {r:'WHITE',s:'GRAY',t:'WHITE',u:'WHITE',v:'WHITE',w:'WHITE',x:'WHITE',y:'WHITE'}, dist: {r:'∞',s:0,t:'∞',u:'∞',v:'∞',w:'∞',x:'∞',y:'∞'}, parent: {r:'NIL',s:'NIL',t:'NIL',u:'NIL',v:'NIL',w:'NIL',x:'NIL',y:'NIL'}},
+        {desc: "Dequeue s, discover r,w", queue: ['r','w'], colors: {r:'GRAY',s:'BLACK',t:'WHITE',u:'WHITE',v:'WHITE',w:'GRAY',x:'WHITE',y:'WHITE'}, dist: {r:1,s:0,t:'∞',u:'∞',v:'∞',w:1,x:'∞',y:'∞'}, parent: {r:'s',s:'NIL',t:'NIL',u:'NIL',v:'NIL',w:'s',x:'NIL',y:'NIL'}},
+        {desc: "Dequeue r, discover v", queue: ['w','v'], colors: {r:'BLACK',s:'BLACK',t:'WHITE',u:'WHITE',v:'GRAY',w:'GRAY',x:'WHITE',y:'WHITE'}, dist: {r:1,s:0,t:'∞',u:'∞',v:2,w:1,x:'∞',y:'∞'}, parent: {r:'s',s:'NIL',t:'NIL',u:'NIL',v:'r',w:'s',x:'NIL',y:'NIL'}},
+        {desc: "Dequeue w, discover t,x", queue: ['v','t','x'], colors: {r:'BLACK',s:'BLACK',t:'GRAY',u:'WHITE',v:'GRAY',w:'BLACK',x:'GRAY',y:'WHITE'}, dist: {r:1,s:0,t:2,u:'∞',v:2,w:1,x:2,y:'∞'}, parent: {r:'s',s:'NIL',t:'w',u:'NIL',v:'r',w:'s',x:'w',y:'NIL'}},
+        {desc: "Dequeue v", queue: ['t','x'], colors: {r:'BLACK',s:'BLACK',t:'GRAY',u:'WHITE',v:'BLACK',w:'BLACK',x:'GRAY',y:'WHITE'}, dist: {r:1,s:0,t:2,u:'∞',v:2,w:1,x:2,y:'∞'}, parent: {r:'s',s:'NIL',t:'w',u:'NIL',v:'r',w:'s',x:'w',y:'NIL'}},
+        {desc: "Dequeue t, discover u", queue: ['x','u'], colors: {r:'BLACK',s:'BLACK',t:'BLACK',u:'GRAY',v:'BLACK',w:'BLACK',x:'GRAY',y:'WHITE'}, dist: {r:1,s:0,t:2,u:3,v:2,w:1,x:2,y:'∞'}, parent: {r:'s',s:'NIL',t:'w',u:'t',v:'r',w:'s',x:'w',y:'NIL'}},
+        {desc: "Dequeue x, discover y", queue: ['u','y'], colors: {r:'BLACK',s:'BLACK',t:'BLACK',u:'GRAY',v:'BLACK',w:'BLACK',x:'BLACK',y:'GRAY'}, dist: {r:1,s:0,t:2,u:3,v:2,w:1,x:2,y:3}, parent: {r:'s',s:'NIL',t:'w',u:'t',v:'r',w:'s',x:'w',y:'x'}},
+        {desc: "Dequeue u", queue: ['y'], colors: {r:'BLACK',s:'BLACK',t:'BLACK',u:'BLACK',v:'BLACK',w:'BLACK',x:'BLACK',y:'GRAY'}, dist: {r:1,s:0,t:2,u:3,v:2,w:1,x:2,y:3}, parent: {r:'s',s:'NIL',t:'w',u:'t',v:'r',w:'s',x:'w',y:'x'}},
+        {desc: "Dequeue y - COMPLETE!", queue: [], colors: {r:'BLACK',s:'BLACK',t:'BLACK',u:'BLACK',v:'BLACK',w:'BLACK',x:'BLACK',y:'BLACK'}, dist: {r:1,s:0,t:2,u:3,v:2,w:1,x:2,y:3}, parent: {r:'s',s:'NIL',t:'w',u:'t',v:'r',w:'s',x:'w',y:'x'}}
+    ],
+    currentStep: 0,
+    positions: {r:[100,100],s:[250,100],t:[250,300],u:[400,300],v:[100,250],w:[250,200],x:[400,200],y:[550,250]}
+};
+
+function drawBFS() {
+    const canvas = document.getElementById('bfsCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const step = bfsData.steps[bfsData.currentStep];
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw edges
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 2;
+    bfsData.graph.edges.forEach(([u, v]) => {
+        const [x1, y1] = bfsData.positions[u];
+        const [x2, y2] = bfsData.positions[v];
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    });
+    
+    // Draw vertices
+    bfsData.graph.vertices.forEach(v => {
+        const [x, y] = bfsData.positions[v];
+        const color = step.colors[v];
+        ctx.fillStyle = color === 'WHITE' ? '#fff' : color === 'GRAY' ? '#ffd700' : '#333';
+        ctx.beginPath();
+        ctx.arc(x, y, 25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        ctx.fillStyle = color === 'BLACK' ? '#fff' : '#000';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(v, x, y + 5);
+    });
+    
+    // Draw data tables
+    ctx.fillStyle = '#333';
+    ctx.font = '14px var(--font-family-mono)';
+    ctx.textAlign = 'left';
+    
+    // Queue
+    ctx.fillText('Queue: [' + step.queue.join(', ') + ']', 20, 420);
+    
+    // Distances
+    let distStr = 'Distances: ';
+    bfsData.graph.vertices.forEach(v => {
+        distStr += v + '=' + step.dist[v] + '  ';
+    });
+    ctx.fillText(distStr, 20, 450);
+    
+    // Parents
+    let parentStr = 'Parents: ';
+    bfsData.graph.vertices.forEach(v => {
+        parentStr += 'π[' + v + ']=' + step.parent[v] + '  ';
+    });
+    ctx.fillText(parentStr, 20, 480);
+    
+    // Legend
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(650, 20, 30, 30);
+    ctx.strokeRect(650, 20, 30, 30);
+    ctx.fillStyle = '#333';
+    ctx.fillText('WHITE', 690, 40);
+    
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect(650, 60, 30, 30);
+    ctx.strokeRect(650, 60, 30, 30);
+    ctx.fillStyle = '#333';
+    ctx.fillText('GRAY', 690, 80);
+    
+    ctx.fillStyle = '#333';
+    ctx.fillRect(650, 100, 30, 30);
+    ctx.strokeRect(650, 100, 30, 30);
+    ctx.fillStyle = '#333';
+    ctx.fillText('BLACK', 690, 120);
+}
+
+function bfsNextStep() {
+    if (bfsData.currentStep < bfsData.steps.length - 1) {
+        bfsData.currentStep++;
+        updateBFS();
+    }
+}
+
+function bfsPrevStep() {
+    if (bfsData.currentStep > 0) {
+        bfsData.currentStep--;
+        updateBFS();
+    }
+}
+
+function bfsReset() {
+    bfsData.currentStep = 0;
+    updateBFS();
+}
+
+function updateBFS() {
+    const step = bfsData.steps[bfsData.currentStep];
+    document.getElementById('bfs-step-indicator').textContent = `Step ${bfsData.currentStep} of ${bfsData.steps.length - 1}`;
+    document.getElementById('bfs-description').textContent = step.desc;
+    document.getElementById('bfs-prev').disabled = bfsData.currentStep === 0;
+    document.getElementById('bfs-next').disabled = bfsData.currentStep === bfsData.steps.length - 1;
+    drawBFS();
+}
+
+// ============================================
+// DFS VISUALIZATION (simplified - showing key moments)
+// ============================================
+const dfsData = {
+    graph: {vertices: ['r','s','t','u','v','w','x','y'], edges: [['r','s'],['r','v'],['s','w'],['w','t'],['w','x'],['t','x'],['t','u'],['x','u'],['x','y'],['u','y']]},
+    steps: [
+        {time:1, action:"Visit r, d[r]=1", colors:{r:'GRAY',s:'WHITE',t:'WHITE',u:'WHITE',v:'WHITE',w:'WHITE',x:'WHITE',y:'WHITE'}, disc:{r:1}, finish:{}, stack:['r']},
+        {time:2, action:"From r→s, d[s]=2", colors:{r:'GRAY',s:'GRAY',t:'WHITE',u:'WHITE',v:'WHITE',w:'WHITE',x:'WHITE',y:'WHITE'}, disc:{r:1,s:2}, finish:{}, stack:['r','s']},
+        {time:3, action:"From s→w, d[w]=3", colors:{r:'GRAY',s:'GRAY',t:'WHITE',u:'WHITE',v:'WHITE',w:'GRAY',x:'WHITE',y:'WHITE'}, disc:{r:1,s:2,w:3}, finish:{}, stack:['r','s','w']},
+        {time:4, action:"From w→t, d[t]=4", colors:{r:'GRAY',s:'GRAY',t:'GRAY',u:'WHITE',v:'WHITE',w:'GRAY',x:'WHITE',y:'WHITE'}, disc:{r:1,s:2,t:4,w:3}, finish:{}, stack:['r','s','w','t']},
+        {time:5, action:"From t→u, d[u]=5", colors:{r:'GRAY',s:'GRAY',t:'GRAY',u:'GRAY',v:'WHITE',w:'GRAY',x:'WHITE',y:'WHITE'}, disc:{r:1,s:2,t:4,u:5,w:3}, finish:{}, stack:['r','s','w','t','u']},
+        {time:6, action:"From u→y, d[y]=6", colors:{r:'GRAY',s:'GRAY',t:'GRAY',u:'GRAY',v:'WHITE',w:'GRAY',x:'WHITE',y:'GRAY'}, disc:{r:1,s:2,t:4,u:5,w:3,y:6}, finish:{}, stack:['r','s','w','t','u','y']},
+        {time:7, action:"Finish y, f[y]=7", colors:{r:'GRAY',s:'GRAY',t:'GRAY',u:'GRAY',v:'WHITE',w:'GRAY',x:'WHITE',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,w:3,y:6}, finish:{y:7}, stack:['r','s','w','t','u']},
+        {time:8, action:"Finish u, f[u]=8", colors:{r:'GRAY',s:'GRAY',t:'GRAY',u:'BLACK',v:'WHITE',w:'GRAY',x:'WHITE',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,w:3,y:6}, finish:{u:8,y:7}, stack:['r','s','w','t']},
+        {time:9, action:"From t→x, d[x]=9", colors:{r:'GRAY',s:'GRAY',t:'GRAY',u:'BLACK',v:'WHITE',w:'GRAY',x:'GRAY',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,w:3,x:9,y:6}, finish:{u:8,y:7}, stack:['r','s','w','t','x']},
+        {time:10, action:"Finish x, f[x]=10", colors:{r:'GRAY',s:'GRAY',t:'GRAY',u:'BLACK',v:'WHITE',w:'GRAY',x:'BLACK',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,w:3,x:9,y:6}, finish:{u:8,x:10,y:7}, stack:['r','s','w','t']},
+        {time:11, action:"Finish t, f[t]=11", colors:{r:'GRAY',s:'GRAY',t:'BLACK',u:'BLACK',v:'WHITE',w:'GRAY',x:'BLACK',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,w:3,x:9,y:6}, finish:{t:11,u:8,x:10,y:7}, stack:['r','s','w']},
+        {time:12, action:"Finish w, f[w]=12", colors:{r:'GRAY',s:'GRAY',t:'BLACK',u:'BLACK',v:'WHITE',w:'BLACK',x:'BLACK',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,w:3,x:9,y:6}, finish:{t:11,u:8,w:12,x:10,y:7}, stack:['r','s']},
+        {time:13, action:"Finish s, f[s]=13", colors:{r:'GRAY',s:'BLACK',t:'BLACK',u:'BLACK',v:'WHITE',w:'BLACK',x:'BLACK',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,w:3,x:9,y:6}, finish:{s:13,t:11,u:8,w:12,x:10,y:7}, stack:['r']},
+        {time:14, action:"From r→v, d[v]=14", colors:{r:'GRAY',s:'BLACK',t:'BLACK',u:'BLACK',v:'GRAY',w:'BLACK',x:'BLACK',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,v:14,w:3,x:9,y:6}, finish:{s:13,t:11,u:8,w:12,x:10,y:7}, stack:['r','v']},
+        {time:15, action:"Finish v, f[v]=15", colors:{r:'GRAY',s:'BLACK',t:'BLACK',u:'BLACK',v:'BLACK',w:'BLACK',x:'BLACK',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,v:14,w:3,x:9,y:6}, finish:{s:13,t:11,u:8,v:15,w:12,x:10,y:7}, stack:['r']},
+        {time:16, action:"Finish r, f[r]=16, DONE", colors:{r:'BLACK',s:'BLACK',t:'BLACK',u:'BLACK',v:'BLACK',w:'BLACK',x:'BLACK',y:'BLACK'}, disc:{r:1,s:2,t:4,u:5,v:14,w:3,x:9,y:6}, finish:{r:16,s:13,t:11,u:8,v:15,w:12,x:10,y:7}, stack:[]}
+    ],
+    currentStep: 0,
+    positions: {r:[100,100],s:[250,100],t:[250,300],u:[400,300],v:[100,250],w:[250,200],x:[400,200],y:[550,250]}
+};
+
+function drawDFS() {
+    const canvas = document.getElementById('dfsCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const step = dfsData.steps[dfsData.currentStep];
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw edges
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 2;
+    dfsData.graph.edges.forEach(([u, v]) => {
+        const [x1, y1] = dfsData.positions[u];
+        const [x2, y2] = dfsData.positions[v];
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    });
+    
+    // Draw vertices with timestamps
+    dfsData.graph.vertices.forEach(v => {
+        const [x, y] = dfsData.positions[v];
+        const color = step.colors[v];
+        ctx.fillStyle = color === 'WHITE' ? '#fff' : color === 'GRAY' ? '#ffd700' : '#333';
+        ctx.beginPath();
+        ctx.arc(x, y, 25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        ctx.fillStyle = color === 'BLACK' ? '#fff' : '#000';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(v, x, y + 5);
+        
+        // Show timestamps
+        const dVal = step.disc[v] || '-';
+        const fVal = step.finish[v] || '-';
+        ctx.font = '11px var(--font-family-mono)';
+        ctx.fillStyle = '#d67a2e';
+        ctx.fillText(dVal + '/' + fVal, x, y - 35);
+    });
+    
+    // Draw data
+    ctx.fillStyle = '#333';
+    ctx.font = '14px var(--font-family-mono)';
+    ctx.textAlign = 'left';
+    
+    ctx.fillText('Time: ' + step.time, 20, 420);
+    ctx.fillText('Stack: [' + step.stack.join(', ') + ']', 20, 450);
+    
+    // Discovery times
+    let discStr = 'Discovery: ';
+    dfsData.graph.vertices.forEach(v => {
+        if (step.disc[v]) discStr += v + '=' + step.disc[v] + ' ';
+    });
+    ctx.fillText(discStr, 20, 480);
+    
+    // Finish times
+    let finStr = 'Finish: ';
+    dfsData.graph.vertices.forEach(v => {
+        if (step.finish[v]) finStr += v + '=' + step.finish[v] + ' ';
+    });
+    ctx.fillText(finStr, 20, 510);
+}
+
+function dfsNextStep() {
+    if (dfsData.currentStep < dfsData.steps.length - 1) {
+        dfsData.currentStep++;
+        updateDFS();
+    }
+}
+
+function dfsPrevStep() {
+    if (dfsData.currentStep > 0) {
+        dfsData.currentStep--;
+        updateDFS();
+    }
+}
+
+function dfsReset() {
+    dfsData.currentStep = 0;
+    updateDFS();
+}
+
+function updateDFS() {
+    const step = dfsData.steps[dfsData.currentStep];
+    document.getElementById('dfs-step-indicator').textContent = `Step ${dfsData.currentStep + 1} of ${dfsData.steps.length}`;
+    document.getElementById('dfs-action').textContent = step.action;
+    document.getElementById('dfs-prev').disabled = dfsData.currentStep === 0;
+    document.getElementById('dfs-next').disabled = dfsData.currentStep === dfsData.steps.length - 1;
+    drawDFS();
+}
+
+// ============================================
+// PRACTICE QUESTION VISUALIZATIONS
+// ============================================
+
+function drawQ1() {
+    const canvas = document.getElementById('q1Canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.font = '14px var(--font-family-mono)';
+    ctx.fillStyle = '#333';
+    ctx.fillText('Final Forest Structure:', 20, 30);
+    
+    // Draw final tree with all elements under 'a'
+    const tree = {value: 'a', children: [
+        {value: 'b', children: []},
+        {value: 'c', children: [{value: 'd', children: []}]},
+        {value: 'e', children: [{value: 'f', children: []}]}
+    ]};
+    
+    drawTreeQ(ctx, tree, 400, 100, 100);
+}
+
+function drawTreeQ(ctx, tree, x, y, spacing) {
+    ctx.fillStyle = '#32b8c6';
+    ctx.beginPath();
+    ctx.arc(x, y, 25, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#1d7d8d';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(tree.value, x, y + 5);
+    
+    const childCount = tree.children.length;
+    if (childCount > 0) {
+        const childSpacing = spacing;
+        const startX = x - ((childCount - 1) * childSpacing) / 2;
+        
+        tree.children.forEach((child, idx) => {
+            const childX = startX + idx * childSpacing;
+            const childY = y + 80;
+            
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y + 25);
+            ctx.lineTo(childX, childY - 25);
+            ctx.stroke();
+            
+            drawTreeQ(ctx, child, childX, childY, childSpacing * 0.7);
+        });
+    }
+}
+
+function drawQ2() {
+    const canvas = document.getElementById('q2Canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.font = '14px sans-serif';
+    ctx.fillStyle = '#333';
+    ctx.fillText('Before Path Compression:', 50, 30);
+    ctx.fillText('After Path Compression:', 450, 30);
+    
+    // Before: tall chain 5->4->3->2->1
+    const before = [{x:100,y:60,v:'5'},{x:100,y:130,v:'4'},{x:100,y:200,v:'3'},{x:100,y:270,v:'2'},{x:100,y:340,v:'1'}];
+    for (let i = 0; i < before.length - 1; i++) {
+        ctx.beginPath();
+        ctx.moveTo(before[i].x, before[i].y + 20);
+        ctx.lineTo(before[i+1].x, before[i+1].y - 20);
+        ctx.strokeStyle = '#666';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    before.forEach(node => {
+        ctx.fillStyle = node.v === '1' ? '#32b8c6' : '#ddd';
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.stroke();
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(node.v, node.x, node.y + 5);
+    });
+    
+    // After: all point to root
+    const after = [{x:600,y:60,v:'1'},{x:500,y:180,v:'2'},{x:580,y:180,v:'3'},{x:620,y:180,v:'4'},{x:700,y:180,v:'5'}];
+    for (let i = 1; i < after.length; i++) {
+        ctx.beginPath();
+        ctx.moveTo(after[i].x, after[i].y - 20);
+        ctx.lineTo(after[0].x, after[0].y + 20);
+        ctx.strokeStyle = '#32b8c6';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    after.forEach(node => {
+        ctx.fillStyle = node.v === '1' ? '#32b8c6' : '#ddd';
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.stroke();
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(node.v, node.x, node.y + 5);
+    });
+}
+
+function drawQ3() {
+    const canvas = document.getElementById('q3Canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.font = '14px sans-serif';
+    ctx.fillStyle = '#333';
+    ctx.fillText('Before Find-Set(5):', 50, 30);
+    ctx.fillText('After Find-Set(5) with Path Compression:', 450, 30);
+    
+    // Same as Q2
+    const before = [{x:100,y:60,v:'5'},{x:100,y:130,v:'4'},{x:100,y:200,v:'3'},{x:100,y:270,v:'2'},{x:100,y:340,v:'1'}];
+    for (let i = 0; i < before.length - 1; i++) {
+        ctx.beginPath();
+        ctx.moveTo(before[i].x, before[i].y + 20);
+        ctx.lineTo(before[i+1].x, before[i+1].y - 20);
+        ctx.strokeStyle = '#666';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    before.forEach(node => {
+        ctx.fillStyle = node.v === '1' ? '#32b8c6' : (node.v === '5' ? '#ffd700' : '#ddd');
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.stroke();
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(node.v, node.x, node.y + 5);
+    });
+    
+    const after = [{x:600,y:60,v:'1'},{x:500,y:180,v:'2'},{x:580,y:180,v:'3'},{x:620,y:180,v:'4'},{x:700,y:180,v:'5'}];
+    for (let i = 1; i < after.length; i++) {
+        ctx.beginPath();
+        ctx.moveTo(after[i].x, after[i].y - 20);
+        ctx.lineTo(after[0].x, after[0].y + 20);
+        ctx.strokeStyle = '#32b8c6';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    after.forEach(node => {
+        ctx.fillStyle = node.v === '1' ? '#32b8c6' : (node.v === '5' ? '#ffd700' : '#ddd');
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.stroke();
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(node.v, node.x, node.y + 5);
+    });
+}
+
+function drawQ5() {
+    const canvas = document.getElementById('q5Canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const pos = {A:[100,100],B:[250,60],C:[250,140],D:[400,100],E:[550,100]};
+    const edges = [['A','B'],['A','C'],['B','D'],['C','D'],['D','E']];
+    const colors = {A:'#333',B:'#333',C:'#333',D:'#333',E:'#333'};
+    
+    // Draw edges
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 2;
+    edges.forEach(([u,v]) => {
+        ctx.beginPath();
+        ctx.moveTo(pos[u][0], pos[u][1]);
+        ctx.lineTo(pos[v][0], pos[v][1]);
+        ctx.stroke();
+    });
+    
+    // Draw BFS tree edges in blue
+    const treeEdges = [['A','B'],['A','C'],['B','D'],['D','E']];
+    ctx.strokeStyle = '#32b8c6';
+    ctx.lineWidth = 3;
+    treeEdges.forEach(([u,v]) => {
+        ctx.beginPath();
+        ctx.moveTo(pos[u][0], pos[u][1]);
+        ctx.lineTo(pos[v][0], pos[v][1]);
+        ctx.stroke();
+    });
+    
+    // Draw vertices
+    Object.keys(pos).forEach(v => {
+        ctx.fillStyle = colors[v];
+        ctx.beginPath();
+        ctx.arc(pos[v][0], pos[v][1], 25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(v, pos[v][0], pos[v][1] + 5);
+    });
+    
+    ctx.fillStyle = '#333';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('BFS Tree (blue edges) - Distances: A=0, B=1, C=1, D=2, E=3', 20, 250);
+}
+
+function drawQ6() {
+    const canvas = document.getElementById('q6Canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const pos = {A:[100,100],B:[250,60],C:[250,140],D:[400,100],E:[550,100]};
+    const edges = [['A','B'],['A','C'],['B','D'],['C','D'],['D','E']];
+    
+    // Draw all edges in gray
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 2;
+    edges.forEach(([u,v]) => {
+        ctx.beginPath();
+        ctx.moveTo(pos[u][0], pos[u][1]);
+        ctx.lineTo(pos[v][0], pos[v][1]);
+        ctx.stroke();
+    });
+    
+    // Draw shortest path A->B->D->E in blue
+    const pathEdges = [['A','B'],['B','D'],['D','E']];
+    ctx.strokeStyle = '#32b8c6';
+    ctx.lineWidth = 4;
+    pathEdges.forEach(([u,v]) => {
+        ctx.beginPath();
+        ctx.moveTo(pos[u][0], pos[u][1]);
+        ctx.lineTo(pos[v][0], pos[v][1]);
+        ctx.stroke();
+    });
+    
+    // Draw vertices
+    Object.keys(pos).forEach(v => {
+        const isOnPath = ['A','B','D','E'].includes(v);
+        ctx.fillStyle = isOnPath ? '#32b8c6' : '#ddd';
+        ctx.beginPath();
+        ctx.arc(pos[v][0], pos[v][1], 25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = isOnPath ? '#fff' : '#333';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(v, pos[v][0], pos[v][1] + 5);
+    });
+    
+    ctx.fillStyle = '#333';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Shortest Path: A → B → D → E (length = 3)', 20, 220);
+}
+
+function drawQ7() {
+    const canvas = document.getElementById('q7Canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const pos = {A:[100,100],B:[250,60],C:[250,140],D:[400,100],E:[550,100]};
+    const edges = [['A','B'],['A','C'],['B','D'],['C','D'],['D','E']];
+    const disc = {A:1,B:2,C:4,D:3,E:6};
+    const finish = {A:10,B:9,C:5,D:8,E:7};
+    
+    // Draw edges
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 2;
+    edges.forEach(([u,v]) => {
+        ctx.beginPath();
+        ctx.moveTo(pos[u][0], pos[u][1]);
+        ctx.lineTo(pos[v][0], pos[v][1]);
+        ctx.stroke();
+    });
+    
+    // Draw DFS tree edges
+    const treeEdges = [['A','B'],['B','D'],['D','C'],['D','E']];
+    ctx.strokeStyle = '#d67a2e';
+    ctx.lineWidth = 3;
+    treeEdges.forEach(([u,v]) => {
+        ctx.beginPath();
+        ctx.moveTo(pos[u][0], pos[u][1]);
+        ctx.lineTo(pos[v][0], pos[v][1]);
+        ctx.stroke();
+    });
+    
+    // Draw vertices with timestamps
+    Object.keys(pos).forEach(v => {
+        ctx.fillStyle = '#333';
+        ctx.beginPath();
+        ctx.arc(pos[v][0], pos[v][1], 25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#d67a2e';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(v, pos[v][0], pos[v][1] + 5);
+        
+        // Timestamps
+        ctx.fillStyle = '#d67a2e';
+        ctx.font = '12px var(--font-family-mono)';
+        ctx.fillText(disc[v] + '/' + finish[v], pos[v][0], pos[v][1] - 35);
+    });
+    
+    ctx.fillStyle = '#333';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('DFS Tree (orange edges) - Timestamps show discovery/finish times', 20, 250);
+}
+
+function toggleSolution(solutionId) {
+    const solution = document.getElementById(solutionId);
+    const btnId = solutionId.replace('-solution', '-btn');
+    const btn = document.getElementById(btnId);
+    
+    if (solution.style.display === 'none') {
+        solution.style.display = 'block';
+        btn.textContent = 'Hide Solution';
+        // Draw visualizations when solution is shown
+        setTimeout(() => {
+            if (solutionId === 'q1-solution') drawQ1();
+            if (solutionId === 'q2-solution') drawQ2();
+            if (solutionId === 'q3-solution') drawQ3();
+            if (solutionId === 'q5-solution') drawQ5();
+            if (solutionId === 'q6-solution') drawQ6();
+            if (solutionId === 'q7-solution') drawQ7();
+        }, 50);
+    } else {
+        solution.style.display = 'none';
+        btn.textContent = 'Show Solution';
+    }
+}
+
+// Initialize on page load
+window.addEventListener('load', function() {
+    updateUF();
+    updateBFS();
+    updateDFS();
+});
+
+        function toggleQuestion(questionId) {
+            const content = document.getElementById(questionId);
+            const icon = document.getElementById('icon-' + questionId);
+
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                icon.classList.remove('rotated');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('show');
+                icon.classList.add('rotated');
+                icon.textContent = '▲';
+            }
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Activate clicked tab
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.altKey) {
+                const sections = ['overview', 'disjoint-sets', 'graphs', 'practice'];
+                const activeSection = document.querySelector('.section.active');
+                const currentIndex = sections.indexOf(activeSection.id);
+
+                if (event.key === 'ArrowLeft' && currentIndex > 0) {
+                    event.preventDefault();
+                    const tabs = document.querySelectorAll('.nav-tab');
+                    tabs[currentIndex - 1].click();
+                } else if (event.key === 'ArrowRight' && currentIndex < sections.length - 1) {
+                    event.preventDefault();
+                    const tabs = document.querySelectorAll('.nav-tab');
+                    tabs[currentIndex + 1].click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
