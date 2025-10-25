@@ -1495,7 +1495,7 @@ function updateUF() {
 // BFS VISUALIZATION
 // ============================================
 const bfsData = {
-    graph: {vertices: ['r','s','t','u','v','w','x','y'], edges: [['r','s'],['r','v'],['s','w'],['w','t'],['w','x'],['t','x'],['t','u'],['x','u'],['x','y'],['u','y']]},
+    graph: {vertices: ['r','s','t','u','v','w','x','y'], edges: [['r','s'],['r','v'],['s','w'],['w','t'],['w','x'],['t','x'],['t','u'],['x','y'],['u','y']]},
     steps: [
         {desc: "Initialize all WHITE, distances ∞", queue: [], colors: {r:'WHITE',s:'WHITE',t:'WHITE',u:'WHITE',v:'WHITE',w:'WHITE',x:'WHITE',y:'WHITE'}, dist: {r:'∞',s:'∞',t:'∞',u:'∞',v:'∞',w:'∞',x:'∞',y:'∞'}, parent: {r:'NIL',s:'NIL',t:'NIL',u:'NIL',v:'NIL',w:'NIL',x:'NIL',y:'NIL'}},
         {desc: "Discover source s", queue: ['s'], colors: {r:'WHITE',s:'GRAY',t:'WHITE',u:'WHITE',v:'WHITE',w:'WHITE',x:'WHITE',y:'WHITE'}, dist: {r:'∞',s:0,t:'∞',u:'∞',v:'∞',w:'∞',x:'∞',y:'∞'}, parent: {r:'NIL',s:'NIL',t:'NIL',u:'NIL',v:'NIL',w:'NIL',x:'NIL',y:'NIL'}},
@@ -1626,7 +1626,7 @@ function updateBFS() {
 // DFS VISUALIZATION (simplified - showing key moments)
 // ============================================
 const dfsData = {
-    graph: {vertices: ['r','s','t','u','v','w','x','y'], edges: [['r','s'],['r','v'],['s','w'],['w','t'],['w','x'],['t','x'],['t','u'],['x','u'],['x','y'],['u','y']]},
+    graph: {vertices: ['r','s','t','u','v','w','x','y'], edges: [['r','s'],['r','v'],['s','w'],['w','t'],['w','x'],['t','x'],['t','u'],['x','y'],['u','y']]},
     steps: [
         {time:1, action:"Visit r, d[r]=1", colors:{r:'GRAY',s:'WHITE',t:'WHITE',u:'WHITE',v:'WHITE',w:'WHITE',x:'WHITE',y:'WHITE'}, disc:{r:1}, finish:{}, stack:['r']},
         {time:2, action:"From r→s, d[s]=2", colors:{r:'GRAY',s:'GRAY',t:'WHITE',u:'WHITE',v:'WHITE',w:'WHITE',x:'WHITE',y:'WHITE'}, disc:{r:1,s:2}, finish:{}, stack:['r','s']},
