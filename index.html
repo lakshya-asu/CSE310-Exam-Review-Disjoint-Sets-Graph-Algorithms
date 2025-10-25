@@ -281,8 +281,9 @@ code {
   background: var(--color-bg-1);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-base);
-  padding: var(--space-16);
+  padding: var(--space-20);
   margin: var(--space-20) 0;
+  min-height: 500px;
 }
 
 .viz-image {
@@ -519,7 +520,8 @@ code {
 canvas {
   display: block;
   margin: 0 auto;
-  background: var(--color-surface);
+  background: #FFFFFF;
+  border: 1px solid #ddd;
   border-radius: var(--radius-base);
   max-width: 100%;
   height: auto;
@@ -635,7 +637,7 @@ canvas {
                             <button class="btn btn-secondary" onclick="ufReset()">Reset</button>
                         </div>
                         <div id="uf-operation" class="operation-text">Initial: Make-Set for all</div>
-                        <canvas id="ufCanvas" width="900" height="500"></canvas>
+                        <canvas id="ufCanvas" width="900" height="550"></canvas>
                         <div id="uf-explanation" class="explanation-text">Each element is its own representative</div>
                     </div>
                 </div>
@@ -824,7 +826,7 @@ canvas {
                             <button class="btn btn-secondary" onclick="bfsReset()">Reset</button>
                         </div>
                         <div id="bfs-description" class="operation-text">Initialize all WHITE, distances ∞</div>
-                        <canvas id="bfsCanvas" width="900" height="600"></canvas>
+                        <canvas id="bfsCanvas" width="900" height="650"></canvas>
                     </div>
 
                     <div class="two-col">
@@ -902,7 +904,7 @@ DFS-Visit(G, u):
                             <button class="btn btn-secondary" onclick="dfsReset()">Reset</button>
                         </div>
                         <div id="dfs-action" class="operation-text">Visit r, d[r]=1</div>
-                        <canvas id="dfsCanvas" width="900" height="600"></canvas>
+                        <canvas id="dfsCanvas" width="900" height="650"></canvas>
                     </div>
 
                     <h4>Edge Classification</h4>
@@ -1349,45 +1351,48 @@ function drawUF() {
     const ctx = canvas.getContext('2d');
     const step = ufData.steps[ufData.currentStep];
     
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = '14px var(--font-family-mono)';
     
     // Draw parent array
-    ctx.fillStyle = '#666';
+    ctx.fillStyle = '#333333';
     ctx.fillText('Parent Array:', 20, 30);
     for (let i = 0; i < 8; i++) {
         const x = 20 + i * 60;
-        ctx.fillStyle = '#f5f5f5';
+        ctx.fillStyle = '#f9f9f9';
         ctx.fillRect(x, 40, 50, 30);
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#333333';
         ctx.strokeRect(x, 40, 50, 30);
-        ctx.fillStyle = '#333';
+        ctx.fillStyle = '#333333';
         ctx.fillText((i+1).toString(), x + 20, 58);
-        ctx.fillStyle = step.parent[i] === (i+1) ? '#1d7d8d' : '#666';
+        ctx.fillStyle = step.parent[i] === (i+1) ? '#3B82F6' : '#333333';
         ctx.font = 'bold 16px var(--font-family-mono)';
         ctx.fillText(step.parent[i].toString(), x + 20, 90);
         ctx.font = '14px var(--font-family-mono)';
     }
     
     // Draw rank array
-    ctx.fillStyle = '#666';
+    ctx.fillStyle = '#333333';
     ctx.fillText('Rank Array:', 520, 30);
     for (let i = 0; i < 8; i++) {
         const x = 520 + i * 45;
-        ctx.fillStyle = '#fff5e6';
+        ctx.fillStyle = '#f9f9f9';
         ctx.fillRect(x, 40, 40, 30);
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#333333';
         ctx.strokeRect(x, 40, 40, 30);
-        ctx.fillStyle = '#333';
+        ctx.fillStyle = '#333333';
         ctx.fillText((i+1).toString(), x + 15, 58);
-        ctx.fillStyle = step.rank[i] > 0 ? '#d67a2e' : '#999';
+        ctx.fillStyle = step.rank[i] > 0 ? '#3B82F6' : '#666666';
         ctx.font = 'bold 16px var(--font-family-mono)';
         ctx.fillText(step.rank[i].toString(), x + 15, 90);
         ctx.font = '14px var(--font-family-mono)';
     }
     
     // Draw forest
-    ctx.fillStyle = '#666';
+    ctx.fillStyle = '#333333';
     ctx.fillText('Forest Structure:', 20, 130);
     
     // Find roots
@@ -1420,15 +1425,15 @@ function buildTree(node, parent) {
 
 function drawTree(ctx, tree, x, y, spacing) {
     // Draw node
-    ctx.fillStyle = '#32b8c6';
+    ctx.fillStyle = '#3B82F6';
     ctx.beginPath();
     ctx.arc(x, y, 20, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#1d7d8d';
+    ctx.strokeStyle = '#2563EB';
     ctx.lineWidth = 2;
     ctx.stroke();
     
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(tree.value.toString(), x, y + 5);
@@ -1444,7 +1449,7 @@ function drawTree(ctx, tree, x, y, spacing) {
             const childY = y + 80;
             
             // Draw edge
-            ctx.strokeStyle = '#666';
+            ctx.strokeStyle = '#4B5563';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(x, y + 20);
@@ -1513,10 +1518,12 @@ function drawBFS() {
     const ctx = canvas.getContext('2d');
     const step = bfsData.steps[bfsData.currentStep];
     
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     // Draw edges
-    ctx.strokeStyle = '#ccc';
+    ctx.strokeStyle = '#4B5563';
     ctx.lineWidth = 2;
     bfsData.graph.edges.forEach(([u, v]) => {
         const [x1, y1] = bfsData.positions[u];
@@ -1531,22 +1538,22 @@ function drawBFS() {
     bfsData.graph.vertices.forEach(v => {
         const [x, y] = bfsData.positions[v];
         const color = step.colors[v];
-        ctx.fillStyle = color === 'WHITE' ? '#fff' : color === 'GRAY' ? '#ffd700' : '#333';
+        ctx.fillStyle = color === 'WHITE' ? '#FFFFFF' : color === 'GRAY' ? '#999999' : '#333333';
         ctx.beginPath();
         ctx.arc(x, y, 25, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#333333';
         ctx.lineWidth = 2;
         ctx.stroke();
         
-        ctx.fillStyle = color === 'BLACK' ? '#fff' : '#000';
+        ctx.fillStyle = color === 'BLACK' ? '#FFFFFF' : '#000000';
         ctx.font = 'bold 16px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(v, x, y + 5);
     });
     
     // Draw data tables
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.font = '14px var(--font-family-mono)';
     ctx.textAlign = 'left';
     
@@ -1568,22 +1575,22 @@ function drawBFS() {
     ctx.fillText(parentStr, 20, 480);
     
     // Legend
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(650, 20, 30, 30);
     ctx.strokeRect(650, 20, 30, 30);
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.fillText('WHITE', 690, 40);
     
-    ctx.fillStyle = '#ffd700';
+    ctx.fillStyle = '#999999';
     ctx.fillRect(650, 60, 30, 30);
     ctx.strokeRect(650, 60, 30, 30);
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.fillText('GRAY', 690, 80);
     
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.fillRect(650, 100, 30, 30);
     ctx.strokeRect(650, 100, 30, 30);
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.fillText('BLACK', 690, 120);
 }
 
@@ -1648,10 +1655,12 @@ function drawDFS() {
     const ctx = canvas.getContext('2d');
     const step = dfsData.steps[dfsData.currentStep];
     
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     // Draw edges
-    ctx.strokeStyle = '#ccc';
+    ctx.strokeStyle = '#4B5563';
     ctx.lineWidth = 2;
     dfsData.graph.edges.forEach(([u, v]) => {
         const [x1, y1] = dfsData.positions[u];
@@ -1666,15 +1675,15 @@ function drawDFS() {
     dfsData.graph.vertices.forEach(v => {
         const [x, y] = dfsData.positions[v];
         const color = step.colors[v];
-        ctx.fillStyle = color === 'WHITE' ? '#fff' : color === 'GRAY' ? '#ffd700' : '#333';
+        ctx.fillStyle = color === 'WHITE' ? '#FFFFFF' : color === 'GRAY' ? '#999999' : '#333333';
         ctx.beginPath();
         ctx.arc(x, y, 25, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#333333';
         ctx.lineWidth = 2;
         ctx.stroke();
         
-        ctx.fillStyle = color === 'BLACK' ? '#fff' : '#000';
+        ctx.fillStyle = color === 'BLACK' ? '#FFFFFF' : '#000000';
         ctx.font = 'bold 16px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(v, x, y + 5);
@@ -1688,7 +1697,7 @@ function drawDFS() {
     });
     
     // Draw data
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.font = '14px var(--font-family-mono)';
     ctx.textAlign = 'left';
     
@@ -1746,10 +1755,12 @@ function drawQ1() {
     const canvas = document.getElementById('q1Canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     ctx.font = '14px var(--font-family-mono)';
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.fillText('Final Forest Structure:', 20, 30);
     
     // Draw final tree with all elements under 'a'
@@ -1763,11 +1774,11 @@ function drawQ1() {
 }
 
 function drawTreeQ(ctx, tree, x, y, spacing) {
-    ctx.fillStyle = '#32b8c6';
+    ctx.fillStyle = '#3B82F6';
     ctx.beginPath();
     ctx.arc(x, y, 25, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#1d7d8d';
+    ctx.strokeStyle = '#2563EB';
     ctx.lineWidth = 2;
     ctx.stroke();
     
@@ -1785,7 +1796,7 @@ function drawTreeQ(ctx, tree, x, y, spacing) {
             const childX = startX + idx * childSpacing;
             const childY = y + 80;
             
-            ctx.strokeStyle = '#666';
+            ctx.strokeStyle = '#4B5563';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(x, y + 25);
@@ -1801,10 +1812,12 @@ function drawQ2() {
     const canvas = document.getElementById('q2Canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     ctx.font = '14px sans-serif';
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.fillText('Before Path Compression:', 50, 30);
     ctx.fillText('After Path Compression:', 450, 30);
     
@@ -1814,18 +1827,18 @@ function drawQ2() {
         ctx.beginPath();
         ctx.moveTo(before[i].x, before[i].y + 20);
         ctx.lineTo(before[i+1].x, before[i+1].y - 20);
-        ctx.strokeStyle = '#666';
+        ctx.strokeStyle = '#4B5563';
         ctx.lineWidth = 2;
         ctx.stroke();
     }
     before.forEach(node => {
-        ctx.fillStyle = node.v === '1' ? '#32b8c6' : '#ddd';
+        ctx.fillStyle = node.v === '1' ? '#3B82F6' : '#D1D5DB';
         ctx.beginPath();
         ctx.arc(node.x, node.y, 20, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#333333';
         ctx.stroke();
-        ctx.fillStyle = '#000';
+        ctx.fillStyle = '#000000';
         ctx.font = 'bold 14px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(node.v, node.x, node.y + 5);
@@ -1837,12 +1850,12 @@ function drawQ2() {
         ctx.beginPath();
         ctx.moveTo(after[i].x, after[i].y - 20);
         ctx.lineTo(after[0].x, after[0].y + 20);
-        ctx.strokeStyle = '#32b8c6';
+        ctx.strokeStyle = '#3B82F6';
         ctx.lineWidth = 2;
         ctx.stroke();
     }
     after.forEach(node => {
-        ctx.fillStyle = node.v === '1' ? '#32b8c6' : '#ddd';
+        ctx.fillStyle = node.v === '1' ? '#3B82F6' : '#D1D5DB';
         ctx.beginPath();
         ctx.arc(node.x, node.y, 20, 0, Math.PI * 2);
         ctx.fill();
@@ -1859,10 +1872,12 @@ function drawQ3() {
     const canvas = document.getElementById('q3Canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     ctx.font = '14px sans-serif';
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.fillText('Before Find-Set(5):', 50, 30);
     ctx.fillText('After Find-Set(5) with Path Compression:', 450, 30);
     
@@ -1872,12 +1887,12 @@ function drawQ3() {
         ctx.beginPath();
         ctx.moveTo(before[i].x, before[i].y + 20);
         ctx.lineTo(before[i+1].x, before[i+1].y - 20);
-        ctx.strokeStyle = '#666';
+        ctx.strokeStyle = '#4B5563';
         ctx.lineWidth = 2;
         ctx.stroke();
     }
     before.forEach(node => {
-        ctx.fillStyle = node.v === '1' ? '#32b8c6' : (node.v === '5' ? '#ffd700' : '#ddd');
+        ctx.fillStyle = node.v === '1' ? '#3B82F6' : (node.v === '5' ? '#DBEAFE' : '#D1D5DB');
         ctx.beginPath();
         ctx.arc(node.x, node.y, 20, 0, Math.PI * 2);
         ctx.fill();
@@ -1894,12 +1909,12 @@ function drawQ3() {
         ctx.beginPath();
         ctx.moveTo(after[i].x, after[i].y - 20);
         ctx.lineTo(after[0].x, after[0].y + 20);
-        ctx.strokeStyle = '#32b8c6';
+        ctx.strokeStyle = '#3B82F6';
         ctx.lineWidth = 2;
         ctx.stroke();
     }
     after.forEach(node => {
-        ctx.fillStyle = node.v === '1' ? '#32b8c6' : (node.v === '5' ? '#ffd700' : '#ddd');
+        ctx.fillStyle = node.v === '1' ? '#3B82F6' : (node.v === '5' ? '#DBEAFE' : '#D1D5DB');
         ctx.beginPath();
         ctx.arc(node.x, node.y, 20, 0, Math.PI * 2);
         ctx.fill();
@@ -1916,14 +1931,16 @@ function drawQ5() {
     const canvas = document.getElementById('q5Canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     const pos = {A:[100,100],B:[250,60],C:[250,140],D:[400,100],E:[550,100]};
     const edges = [['A','B'],['A','C'],['B','D'],['C','D'],['D','E']];
-    const colors = {A:'#333',B:'#333',C:'#333',D:'#333',E:'#333'};
+    const colors = {A:'#333333',B:'#333333',C:'#333333',D:'#333333',E:'#333333'};
     
     // Draw edges
-    ctx.strokeStyle = '#ccc';
+    ctx.strokeStyle = '#D1D5DB';
     ctx.lineWidth = 2;
     edges.forEach(([u,v]) => {
         ctx.beginPath();
@@ -1934,7 +1951,7 @@ function drawQ5() {
     
     // Draw BFS tree edges in blue
     const treeEdges = [['A','B'],['A','C'],['B','D'],['D','E']];
-    ctx.strokeStyle = '#32b8c6';
+    ctx.strokeStyle = '#3B82F6';
     ctx.lineWidth = 3;
     treeEdges.forEach(([u,v]) => {
         ctx.beginPath();
@@ -1949,16 +1966,16 @@ function drawQ5() {
         ctx.beginPath();
         ctx.arc(pos[v][0], pos[v][1], 25, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#333333';
         ctx.lineWidth = 2;
         ctx.stroke();
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = '#FFFFFF';
         ctx.font = 'bold 16px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(v, pos[v][0], pos[v][1] + 5);
     });
     
-    ctx.fillStyle = '#333';
+    ctx.fillStyle = '#333333';
     ctx.font = '14px sans-serif';
     ctx.textAlign = 'left';
     ctx.fillText('BFS Tree (blue edges) - Distances: A=0, B=1, C=1, D=2, E=3', 20, 250);
@@ -1968,13 +1985,15 @@ function drawQ6() {
     const canvas = document.getElementById('q6Canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     const pos = {A:[100,100],B:[250,60],C:[250,140],D:[400,100],E:[550,100]};
     const edges = [['A','B'],['A','C'],['B','D'],['C','D'],['D','E']];
     
     // Draw all edges in gray
-    ctx.strokeStyle = '#ddd';
+    ctx.strokeStyle = '#D1D5DB';
     ctx.lineWidth = 2;
     edges.forEach(([u,v]) => {
         ctx.beginPath();
@@ -1985,7 +2004,7 @@ function drawQ6() {
     
     // Draw shortest path A->B->D->E in blue
     const pathEdges = [['A','B'],['B','D'],['D','E']];
-    ctx.strokeStyle = '#32b8c6';
+    ctx.strokeStyle = '#3B82F6';
     ctx.lineWidth = 4;
     pathEdges.forEach(([u,v]) => {
         ctx.beginPath();
@@ -1997,14 +2016,14 @@ function drawQ6() {
     // Draw vertices
     Object.keys(pos).forEach(v => {
         const isOnPath = ['A','B','D','E'].includes(v);
-        ctx.fillStyle = isOnPath ? '#32b8c6' : '#ddd';
+        ctx.fillStyle = isOnPath ? '#3B82F6' : '#D1D5DB';
         ctx.beginPath();
         ctx.arc(pos[v][0], pos[v][1], 25, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#333333';
         ctx.lineWidth = 2;
         ctx.stroke();
-        ctx.fillStyle = isOnPath ? '#fff' : '#333';
+        ctx.fillStyle = isOnPath ? '#FFFFFF' : '#333333';
         ctx.font = 'bold 16px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(v, pos[v][0], pos[v][1] + 5);
@@ -2020,7 +2039,9 @@ function drawQ7() {
     const canvas = document.getElementById('q7Canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // White background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     const pos = {A:[100,100],B:[250,60],C:[250,140],D:[400,100],E:[550,100]};
     const edges = [['A','B'],['A','C'],['B','D'],['C','D'],['D','E']];
@@ -2028,7 +2049,7 @@ function drawQ7() {
     const finish = {A:10,B:9,C:5,D:8,E:7};
     
     // Draw edges
-    ctx.strokeStyle = '#ccc';
+    ctx.strokeStyle = '#D1D5DB';
     ctx.lineWidth = 2;
     edges.forEach(([u,v]) => {
         ctx.beginPath();
@@ -2039,7 +2060,7 @@ function drawQ7() {
     
     // Draw DFS tree edges
     const treeEdges = [['A','B'],['B','D'],['D','C'],['D','E']];
-    ctx.strokeStyle = '#d67a2e';
+    ctx.strokeStyle = '#3B82F6';
     ctx.lineWidth = 3;
     treeEdges.forEach(([u,v]) => {
         ctx.beginPath();
@@ -2050,20 +2071,20 @@ function drawQ7() {
     
     // Draw vertices with timestamps
     Object.keys(pos).forEach(v => {
-        ctx.fillStyle = '#333';
+        ctx.fillStyle = '#333333';
         ctx.beginPath();
         ctx.arc(pos[v][0], pos[v][1], 25, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#d67a2e';
+        ctx.strokeStyle = '#2563EB';
         ctx.lineWidth = 2;
         ctx.stroke();
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = '#FFFFFF';
         ctx.font = 'bold 16px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(v, pos[v][0], pos[v][1] + 5);
         
         // Timestamps
-        ctx.fillStyle = '#d67a2e';
+        ctx.fillStyle = '#3B82F6';
         ctx.font = '12px var(--font-family-mono)';
         ctx.fillText(disc[v] + '/' + finish[v], pos[v][0], pos[v][1] - 35);
     });
@@ -2071,7 +2092,7 @@ function drawQ7() {
     ctx.fillStyle = '#333';
     ctx.font = '14px sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('DFS Tree (orange edges) - Timestamps show discovery/finish times', 20, 250);
+    ctx.fillText('DFS Tree (blue edges) - Timestamps show discovery/finish times', 20, 250);
 }
 
 function toggleSolution(solutionId) {
